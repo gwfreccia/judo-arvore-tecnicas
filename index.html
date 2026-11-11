@@ -14,6 +14,8 @@
   --nage:#1565c0; --nage-soft:#e6eefa; --katame:#222222; --katame-soft:#ececec; --ok-soft:#e4f2ea;
   --atemi:#a3a8a5; --ban:#d62828; --ban-soft:#fbe9e6; --warn:#9a6411; --warn-soft:#fbf1df;
   --focus:#1565c0;
+  --te:#1e91f3; --koshi:#1565c0; --ashi:#0b4f8a; --sutemi:#5e60ce;
+  --osae:#111111; --shime:#444444; --kan:#6b6b6b;
   --f-display:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
@@ -21,12 +23,18 @@
   --bg:#111613; --surface:#19201c; --ink:#e6ebe7; --muted:#9ca7a1; --line:#2b3530;
   --nage:#86aef0; --nage-soft:#1b2a40; --katame:#d6d6d6; --katame-soft:#2a2a2a; --ok-soft:#17301f;
   --atemi:#6f7672; --ban:#ff8a78; --ban-soft:#3a1d18; --warn:#e5b665; --warn-soft:#352a14;
-  --focus:#86aef0; color-scheme:dark }}
+  --focus:#86aef0; color-scheme:dark;
+  --te:#7cc4ff; --koshi:#5a9ae6; --ashi:#3f78c0; --sutemi:#a3a5f5;
+  --osae:#e6e6e6; --shime:#b8b8b8; --kan:#8e8e8e;
+}}
 :root[data-theme="dark"]{
   --bg:#111613; --surface:#19201c; --ink:#e6ebe7; --muted:#9ca7a1; --line:#2b3530;
   --nage:#86aef0; --nage-soft:#1b2a40; --katame:#d6d6d6; --katame-soft:#2a2a2a; --ok-soft:#17301f;
   --atemi:#6f7672; --ban:#ff8a78; --ban-soft:#3a1d18; --warn:#e5b665; --warn-soft:#352a14;
-  --focus:#86aef0; color-scheme:dark }
+  --focus:#86aef0; color-scheme:dark;
+  --te:#7cc4ff; --koshi:#5a9ae6; --ashi:#3f78c0; --sutemi:#a3a5f5;
+  --osae:#e6e6e6; --shime:#b8b8b8; --kan:#8e8e8e;
+}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
 .wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
@@ -62,6 +70,17 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chip:focus-visible,.tech:focus-visible,.search:focus-visible,summary:focus-visible,.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .hint{font-size:.8rem;color:var(--muted);margin:0}
+.sbox{position:relative}
+.sug{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:15;list-style:none;margin:0;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.16);max-height:min(52vh,420px);overflow:auto}
+.sug li{display:grid;grid-template-columns:auto 1fr auto;gap:0 10px;align-items:baseline;padding:8px 10px;border-radius:8px;cursor:pointer}
+.sug li[aria-selected="true"],.sug li:hover{background:var(--bg)}
+.sug .dot{width:10px;height:10px;border-radius:50%;background:var(--c);align-self:center}
+.sug .sn{font-weight:600;color:var(--c);min-width:0}
+.sug .sn.isban{color:var(--ban)}
+.sug .sk{font-family:var(--f-display);color:var(--muted);font-size:.82rem;white-space:nowrap}
+.sug .st{grid-column:2/-1;font-size:.8rem;color:var(--muted)}
+.sug .none{display:block;color:var(--muted);cursor:default}
+.sug mark{background:transparent;color:inherit;text-decoration:underline;text-underline-offset:2px}
 
 /* árvore */
 .tree{display:flex;flex-direction:column;gap:12px}
@@ -82,6 +101,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sub .sname{font-weight:600}
 .sub .sdesc{font-size:.8rem;color:var(--muted)}
 .sub .count{font-size:.95rem}
+.sub[style]>summary{border-left:6px solid var(--c)}
+.sub[style]>summary .sname{color:var(--c)}
+.sub.grp-tachi>summary{border-left:6px solid transparent;border-image:linear-gradient(to bottom,var(--te),var(--koshi),var(--ashi)) 1}
+.sub.grp-sutemi>summary{border-left:6px solid var(--sutemi)}
+.sub.grp-tachi>summary .count{background:linear-gradient(90deg,var(--te),var(--ashi));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub.grp-sutemi>summary .count,.sub.grp-sutemi>summary .sname{color:var(--sutemi)}
+.list .tech .tn{color:var(--c)}
 .lvl2{padding-left:14px}
 .list{list-style:none;margin:0;padding:0 10px 10px 20px;display:flex;flex-direction:column;gap:4px}
 .tech{width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid transparent;border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;cursor:pointer}
@@ -143,7 +169,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   <div class="tools">
     <label for="q" class="hint">Buscar técnica</label>
-    <input id="q" class="search" type="search" placeholder="Ex.: seoi, gari, jime" autocomplete="off">
+    <div class="sbox"><input id="q" class="search" type="search" placeholder="Ex.: seoi, gari, chave de braço" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sug" aria-autocomplete="list"><ul id="sug" class="sug" role="listbox" aria-label="Técnicas encontradas" hidden></ul></div>
     <div class="chips" role="group" aria-label="Filtros">
       <button class="chip" data-f="all" aria-pressed="true">Todas</button>
       <button class="chip" data-f="ban" aria-pressed="false">Proibidas ou restritas</button>
@@ -196,7 +222,7 @@ const TREE = [
  {id:"nage", name:"Nage-waza", kj:"投技", pt:"técnicas de projeção", color:"nage",
   crit:"Que parte do corpo mais atua? Toda projeção passa por kuzushi, tsukuri e kake.",
   groups:[
-   {name:"Tachi-waza", kj:"立技", pt:"tori em pé", subs:[
+   {name:"Tachi-waza", kj:"立技", pt:"tori em pé", cls:"grp-tachi", subs:[
     {id:"te", name:"Te-waza", kj:"手技", pt:"mãos, braços e ombros", items:[
      ["Seoi-nage","背負投","arremesso sobre o ombro",{g:1,nk:1}],
      ["Ippon-seoi-nage","一本背負投","arremesso sobre o ombro com um braço",{}],
@@ -251,7 +277,7 @@ const TREE = [
      ["Uchi-mata-gaeshi","内股返","contragolpe do uchi-mata",{}]
     ]}
    ]},
-   {name:"Sutemi-waza", kj:"捨身技", pt:"sacrifício: tori cai antes de uke", subs:[
+   {name:"Sutemi-waza", kj:"捨身技", pt:"sacrifício: tori cai antes de uke", cls:"grp-sutemi", subs:[
     {id:"ma", name:"Ma-sutemi-waza", kj:"真捨身技", pt:"tori cai de costas (Santos: mae-sutemi)", items:[
      ["Tomoe-nage","巴投","projeção circular",{g:3,nk:1}],
      ["Sumi-gaeshi","隅返","reversão pela esquina",{g:4,nk:1}],
@@ -335,6 +361,15 @@ document.getElementById("cN").textContent=nN; document.getElementById("cK").text
 
 let filter="all", query="";
 const norm = s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const STOP=new Set(["de","do","da","dos","das","em","com","o","a","e","no","na","pelo","pela","por","para"]);
+function hay(t){ return t._h || (t._h = norm([t.name,t.name.replace(/-/g," "),t.name.replace(/-/g,""),t.pt,t.sub.name,t.sub.pt,t.group.name||""].join(" | "))); }
+function hits(t,q){
+  if(t.kj.includes(q)) return true;
+  const words=norm(q).replace(/-/g," ").split(/\s+/).filter(w=>w && !STOP.has(w));
+  if(!words.length) return true;
+  const h=hay(t); return words.every(w=>h.includes(w));
+}
+function rank(t,q){ const n=norm(q).replace(/[-\s]/g,""), nm=norm(t.name).replace(/-/g,""); return nm.startsWith(n)?0:nm.includes(n)?1:norm(t.pt).includes(norm(q))?2:3; }
 function match(t){
   const o=t.o;
   if(filter==="ban" && !(o.s==="ban"||o.s==="leg")) return false;
@@ -342,7 +377,7 @@ function match(t){
   if(filter==="nk" && !o.nk) return false;
   if(filter==="kk" && !o.kk) return false;
   if(filter==="new" && !o.n) return false;
-  if(query){ const q=norm(query); if(!(norm(t.name).includes(q)||norm(t.pt).includes(q)||t.kj.includes(query))) return false; }
+  if(query && !hits(t,query)) return false;
   return true;
 }
 function tags(o){
@@ -356,6 +391,7 @@ function tags(o){
   if(o.n) a.push('<span class="tag new">NOVA EM 2017</span>');
   return a.join("");
 }
+const subColor = id=>(id==='ma'||id==='yoko')?'sutemi':id;
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const open = new Set(); // galhos abertos lembrados entre renderizações
 
@@ -377,13 +413,13 @@ function render(){
       const inG = all.filter(t=>t.group===g && match(t));
       if(g.name){
         const tot=all.filter(t=>t.group===g).length;
-        html+='<details class="sub" data-k="'+b.id+g.name+'"'+((filtering?inG.length:open.has(b.id+g.name))?' open':'')+'><summary><span class="sname">'+g.name+'</span><span class="kj">'+g.kj+'</span><span class="sdesc">'+g.pt+'</span><span class="count">'+tot+'</span></summary><div class="lvl2">';
+        html+='<details class="sub '+(g.cls||'')+'" data-k="'+b.id+g.name+'"'+((filtering?inG.length:open.has(b.id+g.name))?' open':'')+'><summary><span class="sname">'+g.name+'</span><span class="kj">'+g.kj+'</span><span class="sdesc">'+g.pt+'</span><span class="count">'+tot+'</span></summary><div class="lvl2">';
       }
       g.subs.forEach(s=>{
         const items=all.filter(t=>t.sub===s && match(t));
         const tot=s.items.length;
         if(filtering && !items.length) return;
-        html+='<details class="sub" data-k="'+s.id+'"'+((filtering||open.has(s.id))?' open':'')+'><summary><span class="sname">'+s.name+'</span><span class="kj">'+s.kj+'</span><span class="count">'+(filtering?items.length+'/':'')+tot+'</span></summary><p class="crit" style="padding-left:20px">'+s.pt+'</p><ul class="list">'+
+        html+='<details class="sub" style="--c:var(--'+subColor(s.id)+')" data-k="'+s.id+'"'+((filtering||open.has(s.id))?' open':'')+'><summary><span class="sname">'+s.name+'</span><span class="kj">'+s.kj+'</span><span class="count">'+(filtering?items.length+'/':'')+tot+'</span></summary><p class="crit" style="padding-left:20px">'+s.pt+'</p><ul class="list">'+
           items.map(t=>'<li><button class="tech'+(t.o.s==="ban"?' isban':'')+'" data-n="'+esc(t.name)+'"><span class="tn">'+t.name+'</span><span class="tk">'+t.kj+'</span><span class="tt">'+t.pt+'</span>'+(tags(t.o)?'<span class="tags">'+tags(t.o)+'</span>':'')+'</button></li>').join("")+
           '</ul></details>';
       });
@@ -434,7 +470,32 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !sheet.hidden) h
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
   filter=c.dataset.f; document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===c))); render();
 }));
-document.getElementById("q").addEventListener("input",e=>{ query=e.target.value.trim(); render(); });
+const q=document.getElementById("q"), sug=document.getElementById("sug");
+let sugItems=[], sel=-1;
+function closeSug(){ sug.hidden=true; q.setAttribute("aria-expanded","false"); q.removeAttribute("aria-activedescendant"); sel=-1; }
+function paintSel(){ [...sug.children].forEach((li,i)=>li.setAttribute("aria-selected",String(i===sel))); if(sel>=0){ q.setAttribute("aria-activedescendant","sg"+sel); sug.children[sel].scrollIntoView({block:"nearest"}); } }
+function showSug(){
+  const v=q.value.trim();
+  if(!v){ closeSug(); return; }
+  sugItems=all.filter(t=>hits(t,v)).sort((a,b)=>rank(a,v)-rank(b,v)).slice(0,12);
+  sel=-1;
+  sug.innerHTML = sugItems.length ? sugItems.map((t,i)=>'<li role="option" id="sg'+i+'" data-i="'+i+'" style="--c:var(--'+(t.branch.id==="nage"||t.branch.id==="katame"?subColor(t.sub.id):"ink")+')"><span class="dot" aria-hidden="true"></span><span class="sn'+(t.o.s==="ban"?' isban':'')+'">'+t.name+'</span><span class="sk" lang="ja">'+t.kj+'</span><span class="st">'+t.pt+' · '+t.sub.name+'</span></li>').join("")
+    : '<li class="none">Nenhuma técnica encontrada.</li>';
+  sug.hidden=false; q.setAttribute("aria-expanded","true");
+}
+function pick(i){ const t=sugItems[i]; if(!t) return; closeSug(); show(t); }
+q.addEventListener("input",()=>{ query=q.value.trim(); render(); showSug(); });
+q.addEventListener("focus",()=>{ if(q.value.trim()) showSug(); });
+q.addEventListener("keydown",e=>{
+  if(sug.hidden || !sugItems.length){ if(e.key==="Escape") closeSug(); return; }
+  if(e.key==="ArrowDown"){ e.preventDefault(); sel=(sel+1)%sugItems.length; paintSel(); }
+  else if(e.key==="ArrowUp"){ e.preventDefault(); sel=(sel-1+sugItems.length)%sugItems.length; paintSel(); }
+  else if(e.key==="Enter"){ e.preventDefault(); pick(sel<0?0:sel); }
+  else if(e.key==="Escape"){ closeSug(); }
+});
+sug.addEventListener("mousedown",e=>e.preventDefault());
+sug.addEventListener("click",e=>{ const li=e.target.closest("li[data-i]"); if(li) pick(+li.dataset.i); });
+document.addEventListener("click",e=>{ if(!e.target.closest(".sbox")) closeSug(); });
 
 render();
 })();
