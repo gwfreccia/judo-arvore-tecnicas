@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Árvore interativa das 100 técnicas do Judô Kodokan: grupos, subgrupos, go-kyo e regras IJF 2025-2028. Material didático, Metodologia do Judô, UDESC/CEFID.">
+<title>Árvore das Técnicas do Judô</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+/* Layout: uma coluna mobile-first; árvore em galhos recolhíveis; cartão da técnica sobe do rodapé */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --ink:#1c2420; --muted:#58625d; --line:#d9dfd9;
+  --nage:#1565c0; --nage-soft:#e6eefa; --katame:#222222; --katame-soft:#ececec; --ok-soft:#e4f2ea;
+  --atemi:#a3a8a5; --ban:#d62828; --ban-soft:#fbe9e6; --warn:#9a6411; --warn-soft:#fbf1df;
+  --focus:#1565c0;
+  --f-display:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111613; --surface:#19201c; --ink:#e6ebe7; --muted:#9ca7a1; --line:#2b3530;
+  --nage:#86aef0; --nage-soft:#1b2a40; --katame:#d6d6d6; --katame-soft:#2a2a2a; --ok-soft:#17301f;
+  --atemi:#6f7672; --ban:#ff8a78; --ban-soft:#3a1d18; --warn:#e5b665; --warn-soft:#352a14;
+  --focus:#86aef0; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#19201c; --ink:#e6ebe7; --muted:#9ca7a1; --line:#2b3530;
+  --nage:#86aef0; --nage-soft:#1b2a40; --katame:#d6d6d6; --katame-soft:#2a2a2a; --ok-soft:#17301f;
+  --atemi:#6f7672; --ban:#ff8a78; --ban-soft:#3a1d18; --warn:#e5b665; --warn-soft:#352a14;
+  --focus:#86aef0; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:1.65rem;line-height:1.2;letter-spacing:-.01em}
+.kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.total{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-variant-numeric:tabular-nums}
+.total span{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:.85rem}
+.total b{font-family:var(--f-display)}
+.t-n b{color:var(--nage)} .t-k b{color:var(--katame)}
+
+/* linha do tempo */
+.timeline{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-inline:-4px;padding:4px}
+.timeline ol{list-style:none;margin:0;padding:0;display:flex;gap:8px;min-width:max-content}
+.timeline li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:150px;font-size:.8rem;line-height:1.35}
+.timeline .y{font-family:var(--f-display);font-weight:700;font-size:1rem;display:block;font-variant-numeric:tabular-nums}
+.timeline li.now{border-color:var(--nage)}
+
+/* cabeçalho institucional e capa */
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#ffffff;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.brand img{display:block;height:auto;width:auto;max-height:52px;max-width:46%}
+.cover{margin:0;background:#ffffff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cover img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain}
+.timeline h2{font-size:1rem;margin:0 0 8px}
+
+/* filtros */
+.tools{display:flex;flex-direction:column;gap:10px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.search{width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chip{flex:none;font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible,.tech:focus-visible,.search:focus-visible,summary:focus-visible,.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.hint{font-size:.8rem;color:var(--muted);margin:0}
+
+/* árvore */
+.tree{display:flex;flex-direction:column;gap:12px}
+.branch{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.branch>summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:baseline;gap:10px;border-left:6px solid var(--c)}
+.branch>summary::-webkit-details-marker{display:none}
+.branch .name{font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.branch .kj{font-family:var(--f-display);color:var(--muted);font-size:.9rem}
+.count{margin-left:auto;font-family:var(--f-display);font-weight:700;color:var(--c);font-variant-numeric:tabular-nums;white-space:nowrap}
+.crit{font-size:.82rem;color:var(--muted);padding:0 14px 10px 20px;margin:0}
+.sub{border-top:1px solid var(--line)}
+.sub>summary{list-style:none;cursor:pointer;padding:11px 14px 11px 20px;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.sub .sname,.sub .kj{white-space:nowrap}
+.sub>summary .sdesc{order:5;flex-basis:100%;padding-left:15px}
+.sub>summary::-webkit-details-marker{display:none}
+.sub>summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none;align-self:center}
+.sub[open]>summary::before{transform:rotate(45deg)}
+.sub .sname{font-weight:600}
+.sub .sdesc{font-size:.8rem;color:var(--muted)}
+.sub .count{font-size:.95rem}
+.lvl2{padding-left:14px}
+.list{list-style:none;margin:0;padding:0 10px 10px 20px;display:flex;flex-direction:column;gap:4px}
+.tech{width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1px solid transparent;border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;cursor:pointer}
+.tech:hover{background:var(--bg);border-color:var(--line)}
+.tech .tn{font-weight:600;min-width:0}
+.tech .tk{font-family:var(--f-display);color:var(--muted);font-size:.85rem;white-space:nowrap}
+.tech .tt{grid-column:1/-1;font-size:.82rem;color:var(--muted)}
+.tech .tags{grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:.68rem;font-weight:600;letter-spacing:.04em;border-radius:6px;padding:1px 6px;border:1px solid var(--line);color:var(--muted)}
+.tag.ban{background:var(--ban-soft);color:var(--ban);border-color:transparent}
+.tag.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.new{background:var(--nage-soft);color:var(--nage);border-color:transparent}
+.tech.isban .tn{color:var(--ban)}
+.atemi-note{padding:0 14px 14px 20px;font-size:.88rem;color:var(--muted);margin:0}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 14px 14px 20px;margin:0}
+
+/* cartão */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--surface);border-radius:18px 18px 0 0;border-top:1px solid var(--line);max-height:86vh;overflow:auto;padding:18px max(18px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px rgba(0,0,0,.18)}
+.sheet-in{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.sheet .grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto}
+.sheet h2{font-size:1.45rem}
+.sheet .bigkj{font-family:var(--f-display);font-size:1.6rem;color:var(--muted)}
+.path{font-size:.82rem;color:var(--muted)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:0;font-size:.9rem}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;min-width:0}
+.rule{border-radius:10px;padding:10px 12px;font-size:.9rem}
+.rule.ok{background:var(--ok-soft)} .rule.ban{background:var(--ban-soft)} .rule.warn{background:var(--warn-soft)}
+.rule b{display:block;margin-bottom:2px}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:.88rem;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--ink);background:var(--bg);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* referências */
+.refs{font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.refs h3{font-size:.9rem;color:var(--ink);margin-bottom:6px}
+.refs p{margin:0 0 6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (min-width:640px){h1{font-size:2rem}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand" role="banner">
+    <img src="assets/logo_udesc.png" alt="UDESC, Universidade do Estado de Santa Catarina" width="268" height="100">
+    <img src="assets/logo_cefid.png" alt="CEFID, Centro de Ciências da Saúde e do Esporte" width="252" height="125">
+  </div>
+  <figure class="cover">
+    <img src="assets/capa_judo.webp" alt="Duas judocas em pé: a de judogi azul projeta a de judogi branco" width="1000" height="866">
+  </figure>
+  <header>
+    <div class="kicker">Judô Kodokan · 2MJUD · UDESC/CEFID</div>
+    <h1>Árvore das técnicas</h1>
+    <p class="lead">Desde 1º de abril de 2017, o Kodokan reconhece 100 técnicas oficiais. Toque num galho para abrir. Toque numa técnica para ver a tradução, o lugar no go-kyo e o que a regra diz.</p>
+    <div class="total"><span class="t-n">Nage-waza <b id="cN">68</b></span><span class="t-k">Katame-waza <b id="cK">32</b></span><span>Total <b id="cT">100</b></span></div>
+  </header>
+
+  <div class="tools">
+    <label for="q" class="hint">Buscar técnica</label>
+    <input id="q" class="search" type="search" placeholder="Ex.: seoi, gari, jime" autocomplete="off">
+    <div class="chips" role="group" aria-label="Filtros">
+      <button class="chip" data-f="all" aria-pressed="true">Todas</button>
+      <button class="chip" data-f="ban" aria-pressed="false">Proibidas ou restritas</button>
+      <button class="chip" data-f="gokyo" aria-pressed="false">Go-kyo</button>
+      <button class="chip" data-f="nk" aria-pressed="false">Nage-no-kata</button>
+      <button class="chip" data-f="kk" aria-pressed="false">Katame-no-kata</button>
+      <button class="chip" data-f="new" aria-pressed="false">Novas em 2017</button>
+    </div>
+  </div>
+
+  <main id="tree" class="tree" aria-live="polite"></main>
+
+  <section class="timeline" aria-labelledby="tlTitle">
+    <h2 id="tlTitle">Linha do tempo</h2>
+    <ol>
+      <li><span class="y">1882</span>Kano funda o Kodokan e organiza a herança do jujutsu em três grupos.</li>
+      <li><span class="y">1895</span>Go-kyo-no-waza: 42 técnicas em 5 grupos, para ensinar.</li>
+      <li><span class="y">1920</span>Revisão do go-kyo: 5 grupos de 8, 40 técnicas.</li>
+      <li><span class="y">1982</span>Voltam 8 técnicas retiradas em 1920 e entra o shinmeisho-no-waza.</li>
+      <li class="now"><span class="y">2017</span>Lista atual: 68 projeções + 32 domínios = 100.</li>
+      <li><span class="y">2025</span>Regras IJF 2025–2028: yuko de volta, chave só no cotovelo, pegar a perna dá shido.</li>
+    </ol>
+  </section>
+
+  <section class="refs">
+    <h3>Referências</h3>
+    <p>INTERNATIONAL JUDO FEDERATION (IJF). <i>IJF/Kodokan classification of judo</i>. [S. l.]: IJF Academy, 2025a.</p>
+    <p>INTERNATIONAL JUDO FEDERATION (IJF). <i>Sport and Organisation Rules</i>: Refereeing Rules 2025-2028. [S. l.]: IJF, 2025b.</p>
+    <p>INTERNATIONAL JUDO FEDERATION (IJF). <i>Judo techniques</i>. Disponível em: judo.ijf.org. Acesso em: 9 nov. 2026.</p>
+    <p>ITO, K. et al. The transformation of technical-tactical behaviors for hand techniques used in attacking below the belt after the 2010 International Judo Federation rule revision. <i>Archives of Budo</i>, v. 9, n. 1, p. 1-6, 2013.</p>
+    <p>KODOKAN. <i>Texto para os exames de graduação: Kodokan judô</i>. Tóquio: Kodokan, 2026.</p>
+    <p>SANTOS, S. G. dos. <i>Teoria e metodologia do judô</i>. Florianópolis: CDS/UFSC, 2007. Apostila.</p>
+    <p>Traduções em português: livres, a partir do glossário da IJF (2025a). Prof. Guilherme Weiss Freccia.</p>
+  </section>
+</div>
+
+<div id="scrim" class="scrim" hidden></div>
+<section id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle" hidden>
+  <div class="sheet-in" id="sheetBody"></div>
+</section>
+
+<script>
+(function(){
+const VID_CH = "https://www.youtube.com/channel/UCtF6tu7GuZYkZzht5MIv8UQ/search?query=";
+const IJF = "https://judo.ijf.org/techniques/";
+// [nome, kanji, tradução, opções]
+// opções: g = grupo do go-kyo; nk = nage-no-kata; kk = katame-no-kata; n = nova em 2017;
+// s = status especial ('ban' | 'leg' | 'note'); ijf = slug da página da IJF (null = sem vídeo); note = texto
+const TREE = [
+ {id:"nage", name:"Nage-waza", kj:"投技", pt:"técnicas de projeção", color:"nage",
+  crit:"Que parte do corpo mais atua? Toda projeção passa por kuzushi, tsukuri e kake.",
+  groups:[
+   {name:"Tachi-waza", kj:"立技", pt:"tori em pé", subs:[
+    {id:"te", name:"Te-waza", kj:"手技", pt:"mãos, braços e ombros", items:[
+     ["Seoi-nage","背負投","arremesso sobre o ombro",{g:1,nk:1}],
+     ["Ippon-seoi-nage","一本背負投","arremesso sobre o ombro com um braço",{}],
+     ["Seoi-otoshi","背負落","queda sobre o ombro",{}],
+     ["Tai-otoshi","体落","queda pelo corpo",{g:2}],
+     ["Kata-guruma","肩車","roda sobre o ombro",{g:3,nk:1,s:"note",note:"Na competição atual, é aplicada sem pegar a perna (Ito et al., 2013). Pegar a perna em pé dá shido (IJF, 2025b).",ijf:"Kata-Guruma"}],
+     ["Sukui-nage","掬投","arremesso em concha",{g:4,s:"leg"}],
+     ["Obi-otoshi","帯落","queda pela faixa",{s:"leg"}],
+     ["Uki-otoshi","浮落","queda flutuante",{g:4,nk:1,note:"O kūki-nage de Mifune é uma forma de uki-otoshi."}],
+     ["Sumi-otoshi","隅落","queda para a esquina",{g:5}],
+     ["Yama-arashi","山嵐","tempestade na montanha",{}],
+     ["Obi-tori-gaeshi","帯取返","reversão pegando a faixa",{n:1}],
+     ["Morote-gari","双手刈","ceifada com as duas mãos",{s:"leg"}],
+     ["Kuchiki-taoshi","朽木倒","derrubar a árvore podre",{s:"leg"}],
+     ["Kibisu-gaeshi","踵返","reversão pelo calcanhar",{s:"leg",ijf:"Kibishu-gaeshi"}],
+     ["Uchi-mata-sukashi","内股すかし","esquiva do uchi-mata",{}],
+     ["Ko-uchi-gaeshi","小内返","contragolpe do ko-uchi-gari",{}]
+    ]},
+    {id:"koshi", name:"Koshi-waza", kj:"腰技", pt:"quadril como eixo", items:[
+     ["Uki-goshi","浮腰","quadril flutuante",{g:1,nk:1}],
+     ["O-goshi","大腰","grande arremesso de quadril",{g:1}],
+     ["Koshi-guruma","腰車","roda de quadril",{g:2}],
+     ["Tsurikomi-goshi","釣込腰","quadril com puxada e elevação",{g:2,nk:1}],
+     ["Sode-tsurikomi-goshi","袖釣込腰","quadril com puxada pela manga",{}],
+     ["Harai-goshi","払腰","varredura do quadril",{g:2,nk:1}],
+     ["Tsuri-goshi","釣腰","quadril com elevação",{g:3}],
+     ["Hane-goshi","跳腰","quadril em mola",{g:3}],
+     ["Utsuri-goshi","移腰","troca de quadril",{g:4}],
+     ["Ushiro-goshi","後腰","quadril por trás",{g:5}]
+    ]},
+    {id:"ashi", name:"Ashi-waza", kj:"足技", pt:"pés e pernas", items:[
+     ["De-ashi-harai","出足払","varredura do pé que avança",{g:1}],
+     ["Hiza-guruma","膝車","roda no joelho",{g:1}],
+     ["Sasae-tsurikomi-ashi","支釣込足","bloqueio do pé com puxada",{g:1,nk:1}],
+     ["O-soto-gari","大外刈","grande ceifada externa",{g:1}],
+     ["O-uchi-gari","大内刈","grande ceifada interna",{g:1}],
+     ["Ko-soto-gari","小外刈","pequena ceifada externa",{g:2}],
+     ["Ko-uchi-gari","小内刈","pequena ceifada interna",{g:2}],
+     ["Okuri-ashi-harai","送足払","varredura dos pés em movimento",{g:2,nk:1}],
+     ["Uchi-mata","内股","ceifada por dentro da coxa",{g:2,nk:1,note:"Parece de quadril, mas quem faz o trabalho principal é a perna. Por isso é ashi-waza."}],
+     ["Ko-soto-gake","小外掛","pequeno gancho externo",{g:3}],
+     ["Ashi-guruma","足車","roda na perna",{g:3}],
+     ["Harai-tsurikomi-ashi","払釣込足","varredura do pé com puxada",{g:3}],
+     ["O-guruma","大車","grande roda",{g:4}],
+     ["O-soto-guruma","大外車","grande roda externa",{g:5}],
+     ["O-soto-otoshi","大外落","grande queda externa",{}],
+     ["Tsubame-gaeshi","燕返","contragolpe da andorinha",{}],
+     ["O-soto-gaeshi","大外返","contragolpe do o-soto-gari",{}],
+     ["O-uchi-gaeshi","大内返","contragolpe do o-uchi-gari",{}],
+     ["Hane-goshi-gaeshi","跳腰返","contragolpe do hane-goshi",{}],
+     ["Harai-goshi-gaeshi","払腰返","contragolpe do harai-goshi",{}],
+     ["Uchi-mata-gaeshi","内股返","contragolpe do uchi-mata",{}]
+    ]}
+   ]},
+   {name:"Sutemi-waza", kj:"捨身技", pt:"sacrifício: tori cai antes de uke", subs:[
+    {id:"ma", name:"Ma-sutemi-waza", kj:"真捨身技", pt:"tori cai de costas (Santos: mae-sutemi)", items:[
+     ["Tomoe-nage","巴投","projeção circular",{g:3,nk:1}],
+     ["Sumi-gaeshi","隅返","reversão pela esquina",{g:4,nk:1}],
+     ["Hikikomi-gaeshi","引込返","reversão puxando para baixo",{}],
+     ["Tawara-gaeshi","俵返","reversão do saco de arroz",{}],
+     ["Ura-nage","裏投","projeção para trás",{g:5,nk:1}]
+    ]},
+    {id:"yoko", name:"Yoko-sutemi-waza", kj:"横捨身技", pt:"tori cai de lado", items:[
+     ["Yoko-otoshi","横落","queda lateral",{g:3}],
+     ["Tani-otoshi","谷落","queda no vale",{g:4}],
+     ["Hane-makikomi","跳巻込","enrolamento em mola",{g:4}],
+     ["Soto-makikomi","外巻込","enrolamento por fora",{g:4}],
+     ["Uchi-makikomi","内巻込","enrolamento por dentro",{}],
+     ["Uki-waza","浮技","técnica flutuante",{g:5,nk:1}],
+     ["Yoko-wakare","横分","separação lateral",{g:5}],
+     ["Yoko-guruma","横車","roda lateral",{g:5,nk:1}],
+     ["Yoko-gake","横掛","gancho lateral",{g:5,nk:1}],
+     ["Daki-wakare","抱分","separação abraçando",{}],
+     ["O-soto-makikomi","大外巻込","enrolamento do o-soto",{}],
+     ["Uchi-mata-makikomi","内股巻込","enrolamento do uchi-mata",{}],
+     ["Harai-makikomi","払巻込","enrolamento do harai-goshi",{}],
+     ["Ko-uchi-makikomi","小内巻込","enrolamento do ko-uchi",{n:1}],
+     ["Kani-basami","蟹挟","tesoura do caranguejo",{s:"ban",ijf:null,note:"Hansoku-make direto, ato contra o espírito do judô (IJF, 2025b). Já era proibida em Santos (2007)."}],
+     ["Kawazu-gake","河津掛","gancho de Kawazu",{s:"ban",note:"Hansoku-make direto, ato contra o espírito do judô (IJF, 2025b). O-soto-gari, o-uchi-gari e uchi-mata com a perna entrelaçada continuam permitidos."}]
+    ]}
+   ]}
+  ]},
+ {id:"katame", name:"Katame-waza", kj:"固技", pt:"técnicas de domínio", color:"katame",
+  crit:"Como eu controlo o adversário? Katame-waza é o tipo de técnica. Ne-waza é a situação de solo. Não são a mesma coisa.",
+  groups:[{name:null, subs:[
+    {id:"osae", name:"Osaekomi-waza", kj:"抑込技", pt:"imobilizar · yuko 5 s, waza-ari 10 s, ippon 20 s", items:[
+     ["Kesa-gatame","袈裟固","imobilização em xale",{kk:1}],
+     ["Kuzure-kesa-gatame","崩袈裟固","kesa-gatame modificado",{}],
+     ["Ushiro-kesa-gatame","後袈裟固","kesa-gatame invertido",{n:1}],
+     ["Kata-gatame","肩固","imobilização pelo ombro",{kk:1}],
+     ["Kami-shiho-gatame","上四方固","quatro cantos por cima",{kk:1}],
+     ["Kuzure-kami-shiho-gatame","崩上四方固","kami-shiho modificado",{kk:1}],
+     ["Yoko-shiho-gatame","横四方固","quatro cantos pelo lado",{kk:1}],
+     ["Tate-shiho-gatame","縦四方固","quatro cantos montado",{}],
+     ["Uki-gatame","浮固","imobilização flutuante",{n:1}],
+     ["Ura-gatame","裏固","imobilização por trás",{n:1}]
+    ]},
+    {id:"shime", name:"Shime-waza", kj:"絞技", pt:"estrangular", items:[
+     ["Nami-juji-jime","並十字絞","estrangulamento cruzado normal",{}],
+     ["Gyaku-juji-jime","逆十字絞","estrangulamento cruzado invertido",{kk:1}],
+     ["Kata-juji-jime","片十字絞","estrangulamento meio cruzado",{kk:1}],
+     ["Hadaka-jime","裸絞","estrangulamento nu, sem o judogi",{kk:1}],
+     ["Okuri-eri-jime","送襟絞","estrangulamento deslizando a gola",{kk:1}],
+     ["Kataha-jime","片羽絞","estrangulamento em asa",{kk:1}],
+     ["Katate-jime","片手絞","estrangulamento com uma mão",{}],
+     ["Ryote-jime","両手絞","estrangulamento com as duas mãos",{}],
+     ["Sode-guruma-jime","袖車絞","estrangulamento em roda com a manga",{}],
+     ["Tsukkomi-jime","突込絞","estrangulamento empurrando",{}],
+     ["Sankaku-jime","三角絞","estrangulamento em triângulo",{}],
+     ["Do-jime","胴絞","compressão do tronco com as pernas",{s:"ban",note:"Hansoku-make direto (IJF, 2025b). Segundo a IJF (2025a), é proibido no shiai e também no randori."}]
+    ]},
+    {id:"kan", name:"Kansetsu-waza", kj:"関節技", pt:"chave articular · na competição, só no cotovelo", items:[
+     ["Ude-garami","腕緘","chave em torção do braço",{kk:1}],
+     ["Ude-hishigi-juji-gatame","腕挫十字固","chave de braço em cruz",{kk:1,ijf:"Juji-gatame"}],
+     ["Ude-hishigi-ude-gatame","腕挫腕固","chave de braço com o braço",{kk:1,ijf:"Ude-gatame"}],
+     ["Ude-hishigi-hiza-gatame","腕挫膝固","chave de braço com o joelho",{kk:1,ijf:"Hiza-gatame"}],
+     ["Ude-hishigi-waki-gatame","腕挫腋固","chave de braço pela axila",{s:"note",ijf:"Waki-gatame",note:"Permitida no solo. Em pé, chave sem projeção ou com projeção de alto risco, sem escape para uke, dá hansoku-make direto (IJF, 2025b)."}],
+     ["Ude-hishigi-hara-gatame","腕挫腹固","chave de braço pelo abdômen",{ijf:"Hara-gatame"}],
+     ["Ude-hishigi-ashi-gatame","腕挫脚固","chave de braço com a perna",{ijf:"Ashi-gatame"}],
+     ["Ude-hishigi-te-gatame","腕挫手固","chave de braço com a mão",{ijf:"Te-gatame"}],
+     ["Ude-hishigi-sankaku-gatame","腕挫三角固","chave de braço em triângulo",{ijf:"Sankaku-gatame"}],
+     ["Ashi-garami","足緘","chave de perna",{s:"ban",kk:1,note:"Hansoku-make direto (IJF, 2025b): na competição, chave só no cotovelo. Continua no katame-no-kata, que é forma de estudo."}]
+    ]}
+  ]}]},
+ {id:"atemi", name:"Atemi-waza", kj:"当身技", pt:"golpes em pontos vitais", color:"atemi", atemi:true}
+];
+
+const LEG = "Na forma clássica, pega a perna de uke. Em pé, pegar a perna dá shido (IJF, 2025b). Só vale em situação clara de ne-waza. A técnica continua na lista oficial do Kodokan.";
+const all = [];
+TREE.forEach(b=>{ if(b.atemi) return; b.groups.forEach(g=>g.subs.forEach(s=>s.items.forEach(it=>{
+  all.push({name:it[0],kj:it[1],pt:it[2],o:it[3],branch:b,group:g,sub:s});
+})));});
+
+const nN = all.filter(t=>t.branch.id==="nage").length, nK = all.filter(t=>t.branch.id==="katame").length;
+document.getElementById("cN").textContent=nN; document.getElementById("cK").textContent=nK; document.getElementById("cT").textContent=nN+nK;
+
+let filter="all", query="";
+const norm = s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+function match(t){
+  const o=t.o;
+  if(filter==="ban" && !(o.s==="ban"||o.s==="leg")) return false;
+  if(filter==="gokyo" && !o.g) return false;
+  if(filter==="nk" && !o.nk) return false;
+  if(filter==="kk" && !o.kk) return false;
+  if(filter==="new" && !o.n) return false;
+  if(query){ const q=norm(query); if(!(norm(t.name).includes(q)||norm(t.pt).includes(q)||t.kj.includes(query))) return false; }
+  return true;
+}
+function tags(o){
+  const a=[];
+  if(o.s==="ban") a.push('<span class="tag ban">PROIBIDA</span>');
+  if(o.s==="leg") a.push('<span class="tag warn">PEGA A PERNA</span>');
+  if(o.s==="note" && /shido|hansoku/.test(o.note||"")) a.push('<span class="tag warn">ATENÇÃO NA REGRA</span>');
+  if(o.g) a.push('<span class="tag">GO-KYO '+o.g+'</span>');
+  if(o.nk) a.push('<span class="tag">NAGE-NO-KATA</span>');
+  if(o.kk) a.push('<span class="tag">KATAME-NO-KATA</span>');
+  if(o.n) a.push('<span class="tag new">NOVA EM 2017</span>');
+  return a.join("");
+}
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const open = new Set(); // galhos abertos lembrados entre renderizações
+
+function render(){
+  const root=document.getElementById("tree"); root.innerHTML="";
+  const filtering = filter!=="all" || query;
+  TREE.forEach(b=>{
+    const d=document.createElement("details"); d.className="branch"; d.style.setProperty("--c","var(--"+b.color+")");
+    if(b.atemi){
+      d.innerHTML='<summary><span class="name">'+b.name+'</span><span class="kj">'+b.kj+'</span><span class="count">fora dos 100</span></summary>'+
+        '<p class="atemi-note">'+b.pt+'. Proibidos na luta e no treino livre pelo perigo que têm (IJF, 2025a). Ficam restritos ao kata e à defesa pessoal (SANTOS, 2007). Não entram na contagem das 100 técnicas.</p>';
+      if(filtering) d.hidden=true;
+      root.appendChild(d); return;
+    }
+    const inB = all.filter(t=>t.branch===b && match(t));
+    d.open = filtering ? inB.length>0 : (open.has(b.id) || b.id==="nage");
+    let html='<summary><span class="name">'+b.name+'</span><span class="kj">'+b.kj+'</span><span class="count">'+(filtering?inB.length+' de ':'')+all.filter(t=>t.branch===b).length+'</span></summary><p class="crit">'+b.crit+'</p>';
+    b.groups.forEach(g=>{
+      const inG = all.filter(t=>t.group===g && match(t));
+      if(g.name){
+        const tot=all.filter(t=>t.group===g).length;
+        html+='<details class="sub" data-k="'+b.id+g.name+'"'+((filtering?inG.length:open.has(b.id+g.name))?' open':'')+'><summary><span class="sname">'+g.name+'</span><span class="kj">'+g.kj+'</span><span class="sdesc">'+g.pt+'</span><span class="count">'+tot+'</span></summary><div class="lvl2">';
+      }
+      g.subs.forEach(s=>{
+        const items=all.filter(t=>t.sub===s && match(t));
+        const tot=s.items.length;
+        if(filtering && !items.length) return;
+        html+='<details class="sub" data-k="'+s.id+'"'+((filtering||open.has(s.id))?' open':'')+'><summary><span class="sname">'+s.name+'</span><span class="kj">'+s.kj+'</span><span class="count">'+(filtering?items.length+'/':'')+tot+'</span></summary><p class="crit" style="padding-left:20px">'+s.pt+'</p><ul class="list">'+
+          items.map(t=>'<li><button class="tech'+(t.o.s==="ban"?' isban':'')+'" data-n="'+esc(t.name)+'"><span class="tn">'+t.name+'</span><span class="tk">'+t.kj+'</span><span class="tt">'+t.pt+'</span>'+(tags(t.o)?'<span class="tags">'+tags(t.o)+'</span>':'')+'</button></li>').join("")+
+          '</ul></details>';
+      });
+      if(g.name) html+='</div></details>';
+    });
+    if(filtering && !inB.length) html+='<p class="empty">Nenhuma técnica deste galho com esse filtro.</p>';
+    d.innerHTML=html;
+    d.dataset.k=b.id;
+    root.appendChild(d);
+  });
+  root.querySelectorAll("details").forEach(el=>el.addEventListener("toggle",()=>{ if(filter!=="all"||query) return; const k=el.dataset.k; if(!k) return; el.open?open.add(k):open.delete(k); }));
+}
+
+// cartão
+const sheet=document.getElementById("sheet"), scrim=document.getElementById("scrim"), body=document.getElementById("sheetBody");
+let lastFocus=null;
+function show(t){
+  const o=t.o, slug = ("ijf" in o) ? o.ijf : t.name;
+  let rule;
+  if(o.s==="ban") rule='<div class="rule ban"><b>Proibida na competição</b>'+esc(o.note)+'</div>';
+  else if(o.s==="leg") rule='<div class="rule warn"><b>Restrita: pegada na perna</b>'+LEG+'</div>';
+  else if(o.s==="note" && /shido|hansoku/.test(o.note)) rule='<div class="rule warn"><b>Atenção na regra</b>'+esc(o.note)+'</div>';
+  else rule='<div class="rule ok"><b>Permitida na competição</b>'+(t.branch.id==="katame"&&t.sub.id==="kan"?'A chave atua no cotovelo, a única articulação permitida (IJF, 2025b).':t.sub.id==="osae"?'Imobilização: yuko de 5 a 9 s, waza-ari de 10 a 19 s, ippon aos 20 s (IJF, 2025b).':'Segue as regras gerais da IJF (2025b).')+'</div>';
+  const path=[t.branch.name, t.group.name, t.sub.name].filter(Boolean).join(" › ");
+  body.innerHTML='<div class="grab" aria-hidden="true"></div>'+
+   '<div class="path">'+path+'</div>'+
+   '<div><h2 id="sTitle">'+t.name+'</h2><div class="bigkj" lang="ja">'+t.kj+'</div></div>'+
+   '<dl class="facts"><dt>Tradução</dt><dd>'+t.pt+'</dd>'+
+   '<dt>Subgrupo</dt><dd>'+t.sub.name+': '+t.sub.pt+'</dd>'+
+   '<dt>Go-kyo</dt><dd>'+(o.g?o.g+'º grupo (desde 1920)':'fora do go-kyo')+'</dd>'+
+   (t.branch.id==="nage"?'<dt>Nage-no-kata</dt><dd>'+(o.nk?'sim':'não')+'</dd>':'<dt>Katame-no-kata</dt><dd>'+(o.kk?'sim':'não')+'</dd>')+
+   (o.n?'<dt>Lista</dt><dd>entrou na classificação de 2017</dd>':'')+
+   '</dl>'+ rule +
+   (o.note && o.s!=="ban" && !(o.s==="note" && /shido|hansoku/.test(o.note)) ? '<p class="hint">'+esc(o.note)+'</p>':'')+
+   '<div class="links">'+(slug?'<a class="btn primary" href="'+IJF+slug+'" target="_blank" rel="noopener">Ver vídeo na IJF</a>':'<span class="hint">A IJF não tem vídeo desta técnica.</span>')+
+   '<a class="btn" href="'+VID_CH+encodeURIComponent(t.name)+'" target="_blank" rel="noopener">Buscar no canal do Kodokan</a>'+
+   '<button class="btn" id="close">Fechar</button></div>';
+  lastFocus=document.activeElement;
+  sheet.hidden=false; scrim.hidden=false;
+  document.getElementById("close").focus();
+}
+function hide(){ sheet.hidden=true; scrim.hidden=true; if(lastFocus) lastFocus.focus(); }
+document.getElementById("tree").addEventListener("click",e=>{ const b=e.target.closest(".tech"); if(!b) return; const t=all.find(x=>x.name===b.dataset.n); if(t) show(t); });
+body.addEventListener("click",e=>{ if(e.target.id==="close") hide(); });
+scrim.addEventListener("click",hide);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !sheet.hidden) hide(); });
+
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+  filter=c.dataset.f; document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===c))); render();
+}));
+document.getElementById("q").addEventListener("input",e=>{ query=e.target.value.trim(); render(); });
+
+render();
+})();
+</script>
+
+</body>
+</html>
