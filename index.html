@@ -142,6 +142,39 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .btn{font:inherit;font-size:.88rem;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--ink);background:var(--bg);cursor:pointer}
 .btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
+/* corpo: judoca de judogi com partes do corpo rotuladas */
+.body{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.body h2{font-size:1.15rem;margin:0 0 4px}
+.body>p{font-size:.86rem;color:var(--muted);margin:0 0 6px}
+.bd-grid{display:grid;gap:10px}
+@media (min-width:640px){.bd-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}}
+.fig{width:100%;height:auto;display:block;max-width:420px;margin:0 auto;touch-action:manipulation}
+.fig .gi{fill:#f7f7f4;stroke:#2b302d;stroke-width:1.6;stroke-linejoin:round}
+.fig .lap{fill:#e4e5df;stroke:#2b302d;stroke-width:1.2;stroke-linejoin:round}
+.fig .skin{fill:#d8ad86;stroke:#2b302d;stroke-width:1.4}
+.fig .hair{fill:#2b2420}
+.fig .belt{fill:#1d1d1d}
+.fig .beltk{stroke:#1d1d1d;stroke-width:6;stroke-linecap:round}
+.fig .fold{fill:none;stroke:#b9bcb6;stroke-width:1.2}
+.bp{cursor:pointer;outline:none}
+.bp .hit{fill:transparent}
+.bp line{stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}
+.bp circle{fill:var(--surface);stroke:var(--nage);stroke-width:2}
+.bp .jp{font-family:var(--f-display);font-weight:700;font-size:14px;fill:var(--ink)}
+.bp .pt{font-size:11px;fill:var(--muted)}
+.bp:hover .jp,.bp:focus-visible .jp{fill:var(--nage)}
+.bp:focus-visible .hit{stroke:var(--focus);stroke-width:1.5}
+.bp.on line{stroke:var(--nage);stroke-width:1.6;stroke-dasharray:none}
+.bp.on circle{fill:var(--nage);r:6}
+.bp.on .jp{fill:var(--nage)}
+.bp.empty .jp{fill:var(--muted)}
+.bp-out h3{font-size:1.3rem;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.bp-out h3 .kj{font-size:1.5rem;color:var(--muted);font-weight:500}
+.bp-out h3 .pt{font-family:var(--f-body);font-size:1rem;font-weight:500;color:var(--muted)}
+.bp-out .note{font-size:.84rem;margin:6px 0 8px;padding:8px 10px;border-radius:10px;background:var(--nage-soft)}
+.bp-out .cnt{font-size:.8rem;color:var(--muted);margin:0 0 4px}
+.bp-out .list{padding:0}
+
 /* referências */
 .refs{font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 .refs h3{font-size:.9rem;color:var(--ink);margin-bottom:6px}
@@ -181,6 +214,41 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   </div>
 
   <main id="tree" class="tree" aria-live="polite"></main>
+
+  <section class="body" aria-labelledby="bdTitle">
+    <h2 id="bdTitle">O corpo no nome das técnicas</h2>
+    <p>Muitos nomes dizem qual parte do corpo ou do judogi trabalha. Toque numa parte para ver as técnicas.</p>
+    <div class="bd-grid">
+      <svg id="fig" class="fig" viewBox="0 0 360 450" role="group" aria-label="Judoca de judogi com as partes do corpo em japonês">
+        <!-- pernas e pés -->
+        <rect class="skin" x="150" y="404" width="15" height="16" rx="3"/><rect class="skin" x="195" y="404" width="15" height="16" rx="3"/>
+        <ellipse class="skin" cx="155" cy="426" rx="18" ry="8"/><ellipse class="skin" cx="205" cy="426" rx="18" ry="8"/>
+        <path class="gi" d="M140 228 L179 228 L177 254 L171 408 L145 408 L142 300 Z"/>
+        <path class="gi" d="M220 228 L181 228 L183 254 L189 408 L215 408 L218 300 Z"/>
+        <path class="fold" d="M150 322 q8 5 18 0 M192 322 q8 5 18 0"/>
+        <!-- mangas e mãos -->
+        <path class="gi" d="M138 96 L152 106 L142 170 L134 226 L108 224 L112 166 L122 102 Z"/>
+        <path class="gi" d="M222 96 L208 106 L218 170 L226 226 L252 224 L248 166 L238 102 Z"/>
+        <path class="fold" d="M115 168 q12 4 24 -2 M245 168 q-12 4 -24 -2"/>
+        <ellipse class="skin" cx="121" cy="238" rx="10" ry="12"/><ellipse class="skin" cx="239" cy="238" rx="10" ry="12"/>
+        <!-- pescoço e cabeça -->
+        <rect class="skin" x="170" y="60" width="20" height="30" rx="4"/>
+        <circle class="skin" cx="180" cy="42" r="22"/>
+        <path class="hair" d="M158 40 q2 -24 22 -24 q20 0 22 24 q-6 -12 -22 -12 q-16 0 -22 12 Z"/>
+        <!-- casaco (uwagi) -->
+        <path class="gi" d="M150 84 Q180 78 210 84 L224 96 L222 242 L138 242 L136 96 Z"/>
+        <path class="skin" d="M171 84 L189 84 L180 122 Z"/>
+        <path class="lap" d="M165 84 L175 84 L199 172 L190 175 Z"/>
+        <path class="lap" d="M185 84 L195 84 L168 200 L158 198 Z"/>
+        <!-- faixa (obi) -->
+        <rect class="belt" x="137" y="198" width="86" height="11" rx="2"/>
+        <rect class="belt" x="173" y="196" width="14" height="15" rx="3"/>
+        <path class="beltk" d="M176 210 L169 240 M184 210 L192 240"/>
+        <g id="bps"></g>
+      </svg>
+      <div id="bpOut" class="bp-out" aria-live="polite"></div>
+    </div>
+  </section>
 
   <section class="timeline" aria-labelledby="tlTitle">
     <h2 id="tlTitle">Linha do tempo</h2>
@@ -496,6 +564,53 @@ q.addEventListener("keydown",e=>{
 sug.addEventListener("mousedown",e=>e.preventDefault());
 sug.addEventListener("click",e=>{ const li=e.target.closest("li[data-i]"); if(li) pick(+li.dataset.i); });
 document.addEventListener("click",e=>{ if(!e.target.closest(".sbox")) closeSug(); });
+
+// corpo: cada parte liga às técnicas pelo kanji do nome (k) ou pelo que a técnica usa (via)
+const BODY=[
+ {id:"kubi",jp:"Kubi",kj:"首",pt:"pescoço",side:"L",ly:58,x:180,y:76,via:t=>t.sub.id==="shime"&&t.name!=="Do-jime",note:"Nenhum nome usa kubi. Mas é aqui que atuam as shime-waza, os estrangulamentos."},
+ {id:"kata",jp:"Kata",kj:"肩",pt:"ombro",side:"L",ly:102,x:141,y:97,k:"肩",note:"Cuidado com o falso amigo. Em Kata-juji-jime, Kataha-jime e Katate-jime, kata é 片 (metade, um só), não 肩 (ombro)."},
+ {id:"ude",jp:"Ude",kj:"腕",pt:"braço",side:"L",ly:146,x:131,y:134,k:"腕"},
+ {id:"hiji",jp:"Hiji",kj:"肘",pt:"cotovelo",side:"L",ly:190,x:125,y:168,via:t=>t.sub.id==="kan"&&t.name!=="Ashi-garami",note:"Nenhum nome usa hiji. Mas é a única articulação que a chave pode atacar na competição (IJF, 2025b)."},
+ {id:"te",jp:"Te",kj:"手",pt:"mão",side:"L",ly:240,x:121,y:240,k:"手",grp:"te"},
+ {id:"mata",jp:"Mata",kj:"股",pt:"coxa, por dentro",side:"L",ly:284,x:173,y:272,k:"股"},
+ {id:"hiza",jp:"Hiza",kj:"膝",pt:"joelho",side:"L",ly:328,x:157,y:322,k:"膝"},
+ {id:"ashi",jp:"Ashi",kj:"足",pt:"pé e perna",side:"L",ly:374,x:157,y:378,k:"足脚",grp:"ashi",note:"Em Ude-hishigi-ashi-gatame, o kanji é 脚, outro jeito de escrever perna."},
+ {id:"kibisu",jp:"Kibisu",kj:"踵",pt:"calcanhar",side:"L",ly:420,x:145,y:428,k:"踵"},
+ {id:"se",jp:"Se",kj:"背",pt:"costas",side:"R",ly:52,x:214,y:90,k:"背",note:"Seoi (背負) quer dizer carregar nas costas."},
+ {id:"eri",jp:"Eri",kj:"襟",pt:"gola",side:"R",ly:96,x:186,y:110,k:"襟"},
+ {id:"waki",jp:"Waki",kj:"腋",pt:"axila",side:"R",ly:140,x:218,y:113,k:"腋"},
+ {id:"do",jp:"Do",kj:"胴",pt:"tronco",side:"R",ly:184,x:208,y:158,k:"胴"},
+ {id:"hara",jp:"Hara",kj:"腹",pt:"abdômen",side:"R",ly:228,x:186,y:186,k:"腹"},
+ {id:"sode",jp:"Sode",kj:"袖",pt:"manga",side:"R",ly:272,x:243,y:198,k:"袖"},
+ {id:"obi",jp:"Obi",kj:"帯",pt:"faixa",side:"R",ly:316,x:210,y:204,k:"帯"},
+ {id:"koshi",jp:"Koshi",kj:"腰",pt:"quadril",side:"R",ly:360,x:216,y:234,k:"腰",grp:"koshi"}
+];
+const subById={}; TREE.forEach(b=>!b.atemi&&b.groups.forEach(g=>g.subs.forEach(s=>subById[s.id]=s)));
+BODY.forEach(p=>{ p.list = all.filter(t=> p.via ? p.via(t) : [...p.k].some(c=>t.kj.includes(c))); });
+const bps=document.getElementById("bps"), bpOut=document.getElementById("bpOut");
+bps.innerHTML=BODY.map(p=>{
+  const L=p.side==="L", tx=L?92:268, lx=L?96:264, an=L?"end":"start", hx=L?0:262;
+  return '<g class="bp'+(p.list.length?'':' empty')+'" data-p="'+p.id+'" tabindex="0" role="button" aria-label="'+p.jp+', '+p.pt+'">'+
+   '<rect class="hit" x="'+hx+'" y="'+(p.ly-17)+'" width="98" height="36" rx="6"/>'+
+   '<line x1="'+lx+'" y1="'+(p.ly-4)+'" x2="'+p.x+'" y2="'+p.y+'"/><circle cx="'+p.x+'" cy="'+p.y+'" r="4.5"/>'+
+   '<text class="jp" x="'+tx+'" y="'+p.ly+'" text-anchor="'+an+'">'+p.jp+'</text>'+
+   '<text class="pt" x="'+tx+'" y="'+(p.ly+13)+'" text-anchor="'+an+'">'+p.pt+'</text></g>';
+}).join("");
+function pickPart(id){
+  const p=BODY.find(x=>x.id===id); if(!p) return;
+  bps.querySelectorAll(".bp").forEach(g=>{ g.classList.toggle("on",g.dataset.p===id); g.setAttribute("aria-pressed",String(g.dataset.p===id)); });
+  const viaTxt = p.via ? 'técnicas que atuam aqui' : 'técnicas com '+p.jp.toLowerCase()+' ('+p.kj+') no nome';
+  let note = p.note||"";
+  if(p.grp){ const s=subById[p.grp]; note=(note?note+' ':'')+'Também dá nome ao subgrupo '+s.name+', com '+s.items.length+' técnicas.'; }
+  bpOut.innerHTML='<h3><span>'+p.jp+'</span><span class="kj" lang="ja">'+p.kj+'</span><span class="pt">'+p.pt+'</span></h3>'+
+   (note?'<p class="note">'+note+'</p>':'')+
+   '<p class="cnt">'+p.list.length+' '+viaTxt+'</p>'+
+   '<ul class="list">'+p.list.map(t=>'<li style="--c:var(--'+subColor(t.sub.id)+')"><button class="tech'+(t.o.s==="ban"?' isban':'')+'" data-n="'+esc(t.name)+'"><span class="tn">'+t.name+'</span><span class="tk">'+t.kj+'</span><span class="tt">'+t.pt+' · '+t.sub.name+'</span></button></li>').join("")+'</ul>';
+}
+bps.addEventListener("click",e=>{ const g=e.target.closest(".bp"); if(g) pickPart(g.dataset.p); });
+bps.addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".bp"); if(g){ e.preventDefault(); pickPart(g.dataset.p); } });
+bpOut.addEventListener("click",e=>{ const b=e.target.closest(".tech"); if(!b) return; const t=all.find(x=>x.name===b.dataset.n); if(t) show(t); });
+pickPart("hiza");
 
 render();
 })();
